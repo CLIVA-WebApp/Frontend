@@ -31,12 +31,36 @@ const plans = [
 const PricingPlans: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Lazy loading observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "100px",
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   // Auto play/pause when visible
   useEffect(() => {
@@ -201,15 +225,19 @@ const PricingPlans: React.FC = () => {
   };
 
   return (
-    <section className="bg-gradient-to-b from-white to-[#1D567C] py-16">
+    <section ref={sectionRef} className="bg-gradient-to-b from-white to-[#1D567C] py-16">
       <div className="max-w-7xl mx-auto px-4 text-center mb-[50px]">
         {/* Heading */}
-        <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
+        <h2 className={`text-4xl md:text-5xl font-bold text-black mb-6 transition-all duration-800 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
           What you can do with CLIVA
         </h2>
 
         {/* Video Container */}
-        <div className="relative max-w-4xl mx-auto rounded-xl overflow-hidden shadow-lg mb-16">
+        <div className={`relative max-w-4xl mx-auto rounded-xl overflow-hidden shadow-lg mb-16 transition-all duration-800 delay-200 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
           <video
             ref={videoRef}
             src="/videos/demo.mp4"
@@ -260,7 +288,9 @@ const PricingPlans: React.FC = () => {
         </div>
 
         {/* Pricing Title */}
-        <h3 className="text-3xl md:text-4xl font-bold text-white mb-12">
+        <h3 className={`text-3xl md:text-4xl font-bold text-white mb-12 transition-all duration-800 delay-400 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
           Choose your plan!
         </h3>
 
@@ -271,13 +301,17 @@ const PricingPlans: React.FC = () => {
             key={plan.name}
             className={`bg-white rounded-xl shadow-lg p-6 flex flex-col 
                 border-2 border-transparent
-                transition-transform duration-500 ease-in-out
+                transition-all duration-1200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
                 hover:scale-110 hover:border-[#FBB917]
-                ${index === 1 ? "scale-105" : ""}`}
+                ${index === 1 ? "scale-105" : ""}
+                ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-20 scale-90"}`}
+            style={{
+              transitionDelay: isVisible ? `${800 + index * 200}ms` : "0ms",
+            }}
             >
             {/* Icon */}
             <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#fbb91740] flex items-center justify-center">
-                <img src={plan.icon} alt={plan.name} className="w-10 h-10" />
+                <img src={plan.icon} alt={plan.name} className="w-10 h-10" loading="lazy" />
             </div>
 
             {/* Name */}
@@ -299,6 +333,7 @@ const PricingPlans: React.FC = () => {
                     src="https://c.animaapp.com/7YfctCCD/img/check-list-3-2@2x.png"
                     alt="check"
                     className="w-5 h-5"
+                    loading="lazy"
                     />
                     {feature}
                 </li>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -29,6 +29,30 @@ const faqs = [
 
 const FAQSection: React.FC = () => {
   const [openIndexes, setOpenIndexes] = useState<number[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Lazy loading observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "100px",
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const toggleFAQ = (index: number) => {
     if (openIndexes.includes(index)) {
@@ -39,16 +63,20 @@ const FAQSection: React.FC = () => {
   };
 
   return (
-    <section className="w-full bg-gradient-to-b from-[#1D567C] via-white to-white py-20 px-6 md:px-20">
+    <section ref={sectionRef} className="w-full bg-gradient-to-b from-[#1D567C] via-white to-white py-20 px-6 md:px-20">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Left: Fixed Title */}
         <div className="md:sticky md:top-28 self-start">
-          <h2 className="text-4xl md:text-5xl font-bold text-black leading-tight">
+          <h2 className={`text-4xl md:text-5xl font-bold text-black leading-tight transition-all duration-1000 ease-out ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}>
             Still Curious about <br />
             CLIVA?
           </h2>
-          <p className="text-gray-700 mt-4 text-lg">
-            Let us answer your curiousity
+          <p className={`text-gray-700 mt-4 text-lg transition-all duration-1200 ease-out delay-300 ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}>
+            Let us answer your curiosity
           </p>
         </div>
 
@@ -59,11 +87,16 @@ const FAQSection: React.FC = () => {
             return (
               <div
                 key={index}
-                className={`border rounded-xl shadow-sm overflow-hidden transition-colors duration-300 ${
+                className={`border rounded-xl shadow-sm overflow-hidden transition-all duration-1200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
                   isOpen
                     ? "bg-[#37B7BE] border-[#1D567C]"
                     : "bg-white border-gray-300"
+                } ${
+                  isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"
                 }`}
+                style={{
+                  transitionDelay: isVisible ? `${600 + index * 150}ms` : "0ms",
+                }}
               >
                 {/* Question */}
                 <button

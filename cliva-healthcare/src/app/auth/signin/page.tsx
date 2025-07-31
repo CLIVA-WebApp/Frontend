@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -25,6 +25,15 @@ export default function SignUpPage() {
     confirmPassword: ''
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isAnimated, setIsAnimated] = useState(false)
+
+  // Trigger animations on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimated(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Validation functions
   const validateEmail = (email: string) => {
@@ -201,9 +210,11 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       {/* Left Image Section */}
-      <div className="w-3/5 relative">
+      <div className={`w-3/5 relative transition-all duration-1000 ease-out ${
+        isAnimated ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+      }`}>
         <Image
           src="/images/hospital-building.png"
           alt="Hospital Building"
@@ -213,10 +224,14 @@ export default function SignUpPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#fefefe] opacity-100" />
       </div>
 
-      <div className="w-2/5 px-24 py-10 bg-white flex flex-col justify-center relative">   
+      <div className={`w-2/5 px-24 py-10 bg-white flex flex-col justify-center relative transition-all duration-1000 ease-out delay-300 ${
+        isAnimated ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+      }`}>   
         <form onSubmit={handleRegister} className="space-y-6">
           {/* Form Title */}
-          <div className="text-4xl font-bold text-[#1D567C] mb-8">
+          <div className={`text-4xl font-bold text-[#1D567C] mb-8 transition-all duration-800 ease-out delay-500 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          }`}>
             <div className="flex items-center gap-2">
               <span>Create Account</span>
             </div>
@@ -224,8 +239,10 @@ export default function SignUpPage() {
 
           <div className="space-y-5 text-gray-700">
             {/* Email */}
-            <div className="space-y-2">
-              <div className="relative">
+            <div className={`space-y-2 transition-all duration-600 ease-out delay-700 ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}>
+              <div className="relative group">
                 <Input
                   type="email"
                   placeholder="email address"
@@ -237,24 +254,28 @@ export default function SignUpPage() {
                       : isEmailValid() 
                       ? 'border-[#12A048]' 
                       : 'border-gray-300'
-                  } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none`}
+                  } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                    email ? 'animate-pulse' : ''
+                  }`}
                 />
                 {isEmailValid() && (
-                  <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048]" size={18} />
+                  <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={18} />
                 )}
               </div>
               {errors.email && (
-                <p className="text-[#FF2C2C] text-sm">{errors.email}</p>
+                <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.email}</p>
               )}
               {isEmailValid() && !errors.email && (
-                <p className="text-[#12A048] text-sm">Valid email address</p>
+                <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Valid email address</p>
               )}
             </div>
 
             {/* First Name and Last Name */}
-            <div className="flex gap-4">
+            <div className={`flex gap-4 transition-all duration-600 ease-out delay-800 ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}>
               <div className="space-y-2 flex-1">
-                <div className="relative">
+                <div className="relative group">
                   <Input
                     type="text"
                     placeholder="first name"
@@ -266,22 +287,24 @@ export default function SignUpPage() {
                         : isFirstNameValid() 
                         ? 'border-[#12A048]' 
                         : 'border-gray-300'
-                    } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none`}
+                    } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                      firstName ? 'animate-pulse' : ''
+                    }`}
                   />
                   {isFirstNameValid() && (
-                    <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048]" size={18} />
+                    <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={18} />
                   )}
                 </div>
                 {errors.firstName && (
-                  <p className="text-[#FF2C2C] text-sm">{errors.firstName}</p>
+                  <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.firstName}</p>
                 )}
                 {isFirstNameValid() && !errors.firstName && (
-                  <p className="text-[#12A048] text-sm">Valid first name</p>
+                  <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Valid first name</p>
                 )}
               </div>
 
               <div className="space-y-2 flex-1">
-                <div className="relative">
+                <div className="relative group">
                   <Input
                     type="text"
                     placeholder="last name"
@@ -293,24 +316,28 @@ export default function SignUpPage() {
                         : isLastNameValid() 
                         ? 'border-[#12A048]' 
                         : 'border-gray-300'
-                    } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none`}
+                    } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                      lastName ? 'animate-pulse' : ''
+                    }`}
                   />
                   {isLastNameValid() && (
-                    <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048]" size={18} />
+                    <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={18} />
                   )}
                 </div>
                 {errors.lastName && (
-                  <p className="text-[#FF2C2C] text-sm">{errors.lastName}</p>
+                  <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.lastName}</p>
                 )}
                 {isLastNameValid() && !errors.lastName && (
-                  <p className="text-[#12A048] text-sm">Valid last name</p>
+                  <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Valid last name</p>
                 )}
               </div>
             </div>
 
             {/* Username */}
-            <div className="space-y-2">
-              <div className="relative">
+            <div className={`space-y-2 transition-all duration-600 ease-out delay-900 ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}>
+              <div className="relative group">
                 <Input
                   type="text"
                   placeholder="username"
@@ -322,23 +349,27 @@ export default function SignUpPage() {
                       : isUsernameValid() 
                       ? 'border-[#12A048]' 
                       : 'border-gray-300'
-                  } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none`}
+                  } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                    username ? 'animate-pulse' : ''
+                  }`}
                 />
                 {isUsernameValid() && (
-                  <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048]" size={18} />
+                  <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={18} />
                 )}
               </div>
               {errors.username && (
-                <p className="text-[#FF2C2C] text-sm">{errors.username}</p>
+                <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.username}</p>
               )}
               {isUsernameValid() && !errors.username && (
-                <p className="text-[#12A048] text-sm">Username is available</p>
+                <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Username is available</p>
               )}
             </div>
 
             {/* Password */}
-            <div className="space-y-2">
-              <div className="relative">
+            <div className={`space-y-2 transition-all duration-600 ease-out delay-1000 ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}>
+              <div className="relative group">
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="password"
@@ -350,32 +381,36 @@ export default function SignUpPage() {
                       : isPasswordValid() 
                       ? 'border-[#12A048]' 
                       : 'border-gray-300'
-                  } rounded-none bg-transparent px-0 pr-16 focus:ring-0 focus:border-current focus:outline-none`}
+                  } rounded-none bg-transparent px-0 pr-16 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                    password ? 'animate-pulse' : ''
+                  }`}
                 />
                 <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
                   {isPasswordValid() && (
-                    <Check className="text-[#12A048]" size={18} />
+                    <Check className="text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={18} />
                   )}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 transition-all duration-200 hover:scale-110"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
               {errors.password && (
-                <p className="text-[#FF2C2C] text-sm">{errors.password}</p>
+                <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.password}</p>
               )}
               {isPasswordValid() && !errors.password && (
-                <p className="text-[#12A048] text-sm">Password is strong enough</p>
+                <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Password is strong enough</p>
               )}
             </div>
 
             {/* Confirm Password */}
-            <div className="space-y-2">
-              <div className="relative">
+            <div className={`space-y-2 transition-all duration-600 ease-out delay-1100 ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}>
+              <div className="relative group">
                 <Input
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="confirm password"
@@ -387,44 +422,50 @@ export default function SignUpPage() {
                       : isConfirmPasswordValid() 
                       ? 'border-[#12A048]' 
                       : 'border-gray-300'
-                  } rounded-none bg-transparent px-0 pr-16 focus:ring-0 focus:border-current focus:outline-none`}
+                  } rounded-none bg-transparent px-0 pr-16 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                    confirmPassword ? 'animate-pulse' : ''
+                  }`}
                 />
                 <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
                   {isConfirmPasswordValid() && (
-                    <Check className="text-[#12A048]" size={18} />
+                    <Check className="text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={18} />
                   )}
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 transition-all duration-200 hover:scale-110"
                   >
                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
               {errors.confirmPassword && (
-                <p className="text-[#FF2C2C] text-sm">{errors.confirmPassword}</p>
+                <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.confirmPassword}</p>
               )}
               {isConfirmPasswordValid() && !errors.confirmPassword && (
-                <p className="text-[#12A048] text-sm">Passwords match</p>
+                <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Passwords match</p>
               )}
             </div>
 
             <Button 
               type="submit"
               disabled={!isFormValid() || isLoading}
-              className={`w-full mt-4 py-6 rounded-md text-lg shadow-md transition-all duration-200 ${
+              className={`w-full mt-4 py-6 rounded-md text-lg shadow-md transition-all duration-500 ease-out delay-1200 ${
                 isFormValid() && !isLoading
-                  ? 'bg-[#1D567C] hover:bg-[#37B7BE] text-white'
+                  ? 'bg-[#1D567C] hover:bg-[#37B7BE] text-white hover:scale-105 hover:shadow-lg'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
+              } ${
+                isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
               }`}
             >
               {isLoading ? 'Creating Account...' : 'Register'}
             </Button>
 
-            <div className="text-sm text-center mt-2">
+            <div className={`text-sm text-center mt-2 transition-all duration-500 ease-out delay-1300 ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+            }`}>
               Already have an account?{' '}
-              <Link href="/auth/signup" className="text-[#1D567C] font-bold hover:text-[#37B7BE]">
+              <Link href="/auth/signup" className="text-[#1D567C] font-bold hover:text-[#37B7BE] transition-colors duration-200">
                 Login Here
               </Link>
             </div>

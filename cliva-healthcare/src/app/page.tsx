@@ -13,7 +13,7 @@ import PricingPlans from "@/components/sections/landingpage/PricingPlans";
 const App: React.FC = () => {
   return (
     <div className="bg-[#fefefe] w-full">
-      <Header />
+      <Header variant="black"/>
       <HeroSection />
       <FeaturesSection />
       <StatsSection />

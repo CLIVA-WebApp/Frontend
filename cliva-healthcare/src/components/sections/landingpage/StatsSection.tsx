@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 
 const stats = [
   {
@@ -22,15 +23,49 @@ const stats = [
 ];
 
 const StatsSection: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "50px",
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="w-full bg-white py-16">
+    <section 
+      ref={sectionRef}
+      className="w-full bg-white py-16"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Container */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {stats.map((item, index) => (
             <div
               key={index}
-              className="bg-[#fbb917cc] rounded-xl shadow-lg p-6 transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+              className={`bg-[#fbb917cc] rounded-xl shadow-lg p-6 transition-all duration-700 hover:scale-105 hover:shadow-xl ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`}
+              style={{
+                transitionDelay: isVisible ? `${index * 150}ms` : "0ms",
+              }}
             >
               {/* Title */}
               <div className="text-xl font-normal text-black">{item.title}</div>

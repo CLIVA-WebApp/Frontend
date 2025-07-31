@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,15 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState({ email: '', password: '' })
   const [isLoading, setIsLoading] = useState(false)
+  const [isAnimated, setIsAnimated] = useState(false)
+
+  // Trigger animations on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimated(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Email validation
   const validateEmail = (email: string) => {
@@ -83,7 +92,7 @@ export default function LoginPage() {
       setPassword('')
       setErrors({ email: '', password: '' })
       
-      // TODO: LOGIN HERE 
+      {/* TODO */}
       
     } catch (error) {
       console.error('Sign up failed:', error)
@@ -99,8 +108,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[#E9E9E9]">
-      <div className="w-3/5 relative">
+    <div className="flex h-screen bg-[#FEFEFE] overflow-hidden">
+      <div className={`w-3/5 relative transition-all duration-1000 ease-out ${
+        isAnimated ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+      }`}>
         <Image
           src="/images/hospital-building.png"
           alt="Hospital Building"
@@ -111,13 +122,21 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#fefefe] opacity-100" />
       </div>
       
-      <div className="w-2/5 flex flex-col justify-center px-24 bg-[#FEFEFE] text-[#1D567C]">
+      <div className={`w-2/5 flex flex-col justify-center px-24 bg-[#FEFEFE] text-[#1D567C] transition-all duration-1000 ease-out delay-300 ${
+        isAnimated ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+      }`}>
         <form onSubmit={handleSignUp} className="space-y-6">
-          <div className="text-4xl font-bold leading-snug">Hello,<br/>Welcome Back</div>
+          <div className={`text-4xl font-bold leading-snug transition-all duration-800 ease-out delay-500 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          }`}>
+            Hello,<br/>Welcome Back
+          </div>
 
           {/* Email */}
-          <div className="space-y-2">
-            <div className="relative">
+          <div className={`space-y-2 transition-all duration-600 ease-out delay-700 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+          }`}>
+            <div className="relative group">
               <Input
                 type="email"
                 placeholder="Your email"
@@ -129,23 +148,27 @@ export default function LoginPage() {
                     : isEmailValid() 
                     ? 'border-[#12A048]' 
                     : 'border-gray-300'
-                } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none`}
+                } rounded-none bg-transparent px-0 pr-8 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                  email ? 'animate-pulse' : ''
+                }`}
               />
               {isEmailValid() && (
-                <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048]" size={20} />
+                <Check className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={20} />
               )}
             </div>
             {errors.email && (
-              <p className="text-[#FF2C2C] text-sm">{errors.email}</p>
+              <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.email}</p>
             )}
             {isEmailValid() && !errors.email && (
-              <p className="text-[#12A048] text-sm">Valid email address</p>
+              <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Valid email address</p>
             )}
           </div>
 
           {/* Password with Eye icon */}
-          <div className="space-y-2">
-            <div className="relative">
+          <div className={`space-y-2 transition-all duration-600 ease-out delay-800 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+          }`}>
+            <div className="relative group">
               <Input
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Your password"
@@ -157,31 +180,35 @@ export default function LoginPage() {
                     : isPasswordValid() 
                     ? 'border-[#12A048]' 
                     : 'border-gray-300'
-                } rounded-none bg-transparent px-0 pr-16 focus:ring-0 focus:border-current focus:outline-none`}
+                } rounded-none bg-transparent px-0 pr-16 focus:ring-0 focus:border-current focus:outline-none transition-all duration-300 hover:border-[#1D567C] focus:scale-105 focus:shadow-sm ${
+                  password ? 'animate-pulse' : ''
+                }`}
               />
               <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
                 {isPasswordValid() && (
-                  <Check className="text-[#12A048]" size={20} />
+                  <Check className="text-[#12A048] transition-all duration-500 animate-in fade-in scale-in zoom-in-50" size={20} />
                 )}
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 transition-all duration-200 hover:scale-110"
                 >
                   {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               </div>
             </div>
             {errors.password && (
-              <p className="text-[#FF2C2C] text-sm">{errors.password}</p>
+              <p className="text-[#FF2C2C] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">{errors.password}</p>
             )}
             {isPasswordValid() && !errors.password && (
-              <p className="text-[#12A048] text-sm">Password is strong enough</p>
+              <p className="text-[#12A048] text-sm animate-in fade-in slide-in-from-top-2 duration-400 bounce-in">Password is strong enough</p>
             )}
           </div>
 
-          <div className="text-right text-sm">
-            <Link href="#" className="text-[#1D567C] font-medium hover:text-[#37B7BE]">
+          <div className={`text-right text-sm transition-all duration-500 ease-out delay-900 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
+            <Link href="#" className="text-[#1D567C] font-medium hover:text-[#37B7BE] transition-colors duration-200">
               Forgot password?
             </Link>
           </div>
@@ -189,37 +216,46 @@ export default function LoginPage() {
           <Button 
             type="submit"
             disabled={!isFormValid() || isLoading}
-            className={`w-full text-lg py-6 rounded-md shadow-md transition-all duration-200 ${
+            className={`w-full text-lg py-6 rounded-md shadow-md transition-all duration-500 ease-out delay-1000 ${
               isFormValid() && !isLoading
-                ? 'bg-[#1D567C] hover:bg-[#37B7BE] text-white'
+                ? 'bg-[#1D567C] hover:bg-[#37B7BE] text-white hover:scale-105 hover:shadow-lg'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
+            } ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
             }`}
           >
             {isLoading ? 'Signing up...' : 'Sign Up'}
           </Button>
 
-          <div className="text-center text-sm">
+          <div className={`text-center text-sm transition-all duration-500 ease-out delay-1100 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
             Don't have an account?
-            <Link href="/auth/signin" className="ml-1 text-[#1D567C] font-bold hover:text-[#37B7BE]">
+            <Link href="/auth/signin" className="ml-1 text-[#1D567C] font-bold hover:text-[#37B7BE] transition-colors duration-200">
               Register Here
             </Link>
           </div>
 
-          <div className="relative text-center mt-4">
+          <div className={`relative text-center mt-4 transition-all duration-500 ease-out delay-1200 ${
+            isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
             <div className="absolute left-0 right-0 top-2 border-t border-gray-300"></div>
-            <span className="bg-white px-2 relative z-10 text-[#8A8A8A]">or</span>
+            <span className="bg-[#FEFEFE] px-2 relative z-10 text-[#8A8A8A]">or</span>
           </div>
 
           <Button 
             type="button"
             variant="outline" 
-            className="w-full flex items-center justify-center gap-2 mt-4 py-6 border-[#1D567C] hover:bg-gray-50"
+            className={`w-full flex items-center justify-center gap-2 mt-4 py-6 border-[#1D567C] hover:bg-gray-50 transition-all duration-500 ease-out delay-1300 hover:scale-105 hover:shadow-md ${
+              isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}
           >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 533.5 544.3"
                 width={20}
                 height={20}
+                className="transition-transform duration-200 group-hover:scale-110"
                 >
                 <path
                     fill="#4285F4"

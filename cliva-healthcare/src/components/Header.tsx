@@ -5,22 +5,23 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ variant = "black" }) => {
-  // Define styles based on variant
   const textColor =
-    variant === "white" ? "text-white hover:text-gray-200" : "text-black hover:text-blue-500";
+    variant === "white"
+      ? "text-white hover:text-gray-200"
+      : "text-black hover:text-blue-500";
 
   return (
-    <>
+    <div className="absolute top-0 left-0 w-full h-20 z-50">
       {/* Centered Navigation */}
       <div className="absolute top-7 left-1/2 transform -translate-x-1/2 flex items-center gap-10">
         <a
-          href="#"
+          href="/"
           className={`${textColor} text-xl font-normal [font-family:'Inter',Helvetica] transition-colors`}
         >
           Home
         </a>
         <a
-          href="#"
+          href="/about"
           className={`${textColor} text-xl font-normal [font-family:'Inter',Helvetica] transition-colors`}
         >
           About Us
@@ -49,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ variant = "black" }) => {
       >
         Sign In
       </a>
-    </>
+    </div>
   );
 };
 
