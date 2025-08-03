@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ variant = "black" }) => {
 
       {/* Top-Right Sign In */}
       <a
-        href="#"
+        href="/auth/signin"
         className={`absolute top-7 right-10 ${textColor} text-xl font-normal [font-family:'Inter',Helvetica] transition-colors`}
       >
         Sign In

@@ -195,7 +195,7 @@ export default function UnauthorizedPage() {
             }}
             className="inline-block mt-8"
           >
-            <Link href="/login" className="inline-block">
+            <Link href="/auth/signin" className="inline-block">
               <Button className="bg-white font-bold text-[#1D567C] hover:bg-gray-100 hover:scale-105 text-lg px-8 py-6 rounded-full transition-all duration-300 shadow-xl hover:shadow-2xl">
                 Sign In →
               </Button>
