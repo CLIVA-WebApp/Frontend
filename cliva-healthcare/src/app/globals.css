@@ -1,6 +1,12 @@
+@import 'leaflet/dist/leaflet.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-marker-icon {
+  background: transparent !important;
+  border: none !important;
+}
 
 @layer base {
   :root {

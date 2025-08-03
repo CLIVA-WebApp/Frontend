@@ -5,6 +5,7 @@ import { ProtectedRoute } from '@/components/sections/auth/ProtectedRoute'
 import { Header } from '@/components'
 import { useAuth } from '@/lib/auth/hooks/useAuth'
 import { Button } from '@/components/ui/button'
+import Dashboard from '@/components/sections/dashboard/dashboard'
 
 function DashboardContent() {
   const { user, signOut } = useAuth()
@@ -30,7 +31,7 @@ function DashboardContent() {
                   Welcome to your Dashboard
                 </h1>
                 <p className="text-gray-600 mt-2">
-                  Hello, {user?.firstName} {user?.lastName}!
+                  Hello, {user?.full_name}!
                 </p>
               </div>
               
@@ -50,7 +51,7 @@ function DashboardContent() {
                 </h3>
                 <div className="space-y-2 text-sm">
                   <p><strong>Email:</strong> {user?.email}</p>
-                  <p><strong>Username:</strong> {user?.username}</p>
+                  {/* <p><strong>Username:</strong> {user?.username}</p> */}
                   <p><strong>ID:</strong> {user?.id}</p>
                 </div>
               </div>
@@ -61,7 +62,7 @@ function DashboardContent() {
                 </h3>
                 <div className="space-y-2 text-sm">
                   <p><strong>Status:</strong> Active</p>
-                  <p><strong>Member Since:</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
+                  {/* <p><strong>Member Since:</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p> */}
                 </div>
               </div>
 
@@ -104,7 +105,7 @@ function DashboardContent() {
 export default function DashboardPage() {
   return (
     <ProtectedRoute requireAuth={true}>
-      <DashboardContent />
+      <Dashboard />
     </ProtectedRoute>
   )
 }

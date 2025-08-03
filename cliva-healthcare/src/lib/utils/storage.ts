@@ -10,57 +10,77 @@ export class AuthStorage {
   }
 
   /**
-   * Store authentication data
+   * Get cookie value by name
+   */
+  private static getCookie(name: string): string | null {
+  if (!this.isBrowser()) return null
+  
+  // Debug: log what we're looking for and what we have
+  console.log(`🔍 Looking for cookie: ${name}`)
+  console.log(`🍪 All cookies: "${document.cookie}"`)
+  
+  if (!document.cookie) return null
+  
+  // More robust cookie parsing
+  const cookies = document.cookie.split(';')
+  
+  for (let cookie of cookies) {
+    const [cookieName, ...cookieValueParts] = cookie.trim().split('=')
+    const cookieValue = cookieValueParts.join('=') // Handle values with = in them
+    
+    console.log(`🍪 Checking: "${cookieName}" = "${cookieValue}"`)
+    
+    if (cookieName === name) {
+      return cookieValue || null
+    }
+  }
+  
+  return null
+}
+
+  /**
+   * Store authentication data (cookies are likely set by your server)
    */
   static storeAuth(authData: AuthResponse): void {
-    if (!this.isBrowser()) return
-
-    localStorage.setItem(authConfig.storage.tokenKey, authData.token)
-    localStorage.setItem(authConfig.storage.userKey, JSON.stringify(authData.user))
+    // Since cookies are set by server, we don't need to do anything here
+    // or if you need to set them client-side:
+    // document.cookie = `access_token=${authData.token}; path=/`
   }
 
   /**
-   * Get stored token
+   * Get stored token from cookies
    */
   static getToken(): string | null {
-    if (!this.isBrowser()) return null
-    return localStorage.getItem(authConfig.storage.tokenKey)
+    // Can't access HttpOnly cookie from JavaScript
+    return null
   }
 
   /**
-   * Get stored user data
+   * Get stored user data from cookies
    */
   static getUser(): User | null {
-    if (!this.isBrowser()) return null
-    
-    const userData = localStorage.getItem(authConfig.storage.userKey)
-    if (!userData) return null
+    // Don't try to get user from localStorage anymore
+    // Let the /me endpoint handle this
+    return null
+  }
 
-    try {
-      return JSON.parse(userData)
-    } catch (error) {
-      console.error('Failed to parse stored user data:', error)
-      return null
+  /**
+   * Clear authentication (let server handle cookie clearing)
+   */
+  static clearAuth(): void {
+    // Usually handled by server on logout, but you can also:
+    if (this.isBrowser()) {
+      document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
+      document.cookie = 'user_data=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
     }
   }
 
   /**
-   * Clear all authentication data
-   */
-  static clearAuth(): void {
-    if (!this.isBrowser()) return
-
-    localStorage.removeItem(authConfig.storage.tokenKey)
-    localStorage.removeItem(authConfig.storage.userKey)
-    localStorage.removeItem(authConfig.storage.redirectKey)
-  }
-
-  /**
-   * Store redirect URL for post-authentication
+   * Store redirect URL (keep this in localStorage since it's temporary)
    */
   static storeRedirectUrl(url: string): void {
     if (!this.isBrowser()) return
-    localStorage.setItem(authConfig.storage.redirectKey, url)
+    localStorage.setItem('redirect_url', url)
   }
 
   /**
@@ -68,19 +88,21 @@ export class AuthStorage {
    */
   static getAndClearRedirectUrl(): string | null {
     if (!this.isBrowser()) return null
-    
-    const url = localStorage.getItem(authConfig.storage.redirectKey)
+    const url = localStorage.getItem('redirect_url')
     if (url) {
-      localStorage.removeItem(authConfig.storage.redirectKey)
+      localStorage.removeItem('redirect_url')
     }
     return url
   }
 
   /**
-   * Check if user is potentially authenticated (has token)
+   * Check if user has valid session
    */
   static hasValidSession(): boolean {
-    return !!this.getToken()
+    // Since we can't check HttpOnly cookies client-side,
+    // and we're using the /me endpoint to validate,
+    // always return true here
+    return true
   }
 
   /**

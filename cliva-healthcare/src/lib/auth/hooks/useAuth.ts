@@ -40,7 +40,7 @@ export function useAuth(options: AuthHookOptions = {}) {
     user: auth.user,
     userId: auth.user?.id,
     userEmail: auth.user?.email,
-    userName: auth.user ? `${auth.user.firstName} ${auth.user.lastName}` : null,
+    userName: auth.user?.full_name || null, 
     
     // Auth actions
     signIn: auth.login,

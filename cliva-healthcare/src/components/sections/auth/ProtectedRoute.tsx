@@ -18,11 +18,19 @@ export function ProtectedRoute({
   fallback,
   redirectTo = authConfig.paths.login,
   requireAuth = true,
-  roles = []
+  // Remove roles parameter since you don't use it
 }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading, user } = useAuth({
     requireAuth,
     redirectOnUnauth: redirectTo
+  })
+
+  // Add debugging
+  console.log('🔒 ProtectedRoute debug:', {
+    isAuthenticated,
+    isLoading,
+    user,
+    requireAuth
   })
 
   // Show loading state
@@ -53,36 +61,7 @@ export function ProtectedRoute({
     )
   }
 
-  // Check role-based access (if roles are specified)
-  if (roles.length > 0 && user && isAuthenticated) {
-    // Handle both single role and multiple roles
-    const userRoles: string[] = []
-    
-    if (user.role) {
-      userRoles.push(user.role)
-    }
-    
-    if (user.roles && Array.isArray(user.roles)) {
-      userRoles.push(...user.roles)
-    }
-    
-    const hasRequiredRole = roles.some(role => userRoles.includes(role))
-    
-    if (!hasRequiredRole) {
-      return fallback || (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Insufficient Permissions
-            </h2>
-            <p className="text-gray-600">
-              You don't have the required permissions to access this page.
-            </p>
-          </div>
-        </div>
-      )
-    }
-  }
+  // Remove all role checking since you don't have roles
 
   return <>{children}</>
 }

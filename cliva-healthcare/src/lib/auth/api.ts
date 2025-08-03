@@ -14,9 +14,11 @@ export class AuthApi {
    * Get current authenticated user
    */
   static async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get<User>(authConfig.endpoints.me)
-    return response.data!
-  }
+  const response = await apiClient.get<User>(authConfig.endpoints.me) // Change back to <User>
+  
+  // Since your User interface now matches the backend response, just return it directly
+  return response.data!
+}
 
   /**
    * Login with email and password

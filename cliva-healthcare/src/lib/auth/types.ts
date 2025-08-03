@@ -3,14 +3,12 @@
 export interface User {
   id: string
   email: string
-  firstName: string
-  lastName: string
-  username: string
-  avatar?: string
-  role?: string
-  roles?: string[]
-  createdAt: string
-  updatedAt: string
+  full_name: string  // Changed from firstName/lastName
+  avatar_url?: string  // Changed from avatar
+  provider: string  // This maps to role concept
+  is_active: boolean
+  // Remove fields that your backend doesn't provide:
+  // username, roles, createdAt, updatedAt
 }
 
 export interface AuthState {
