@@ -9,6 +9,9 @@ import FAQSection from "../components/sections/landingpage/FAQSection";
 import PartnersSection from "../components/sections/landingpage/PartnersSection";
 import Footer from "../components/Footer";
 import PricingPlans from "@/components/sections/landingpage/PricingPlans";
+import 'leaflet/dist/leaflet.css';
+import './globals.css'
+
 
 const App: React.FC = () => {
   return (
